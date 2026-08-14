@@ -1,0 +1,10 @@
+CustoLens AI UI update
+
+1. Customer Prediction: light number-input steppers, light purple slider, and prediction + strategy/actions merged into one right-side block.
+2. Business Strategies: equal-height professional cards.
+3. Sidebar: single CustoLens AI title at the top; duplicate brand removed.
+4. Dashboard + Analytics: combined into one Dashboard & Analytics page with clickable tabs for Overview, Customer Analytics, Model Performance, and Cluster Insights.
+5. Model Performance includes Random Forest evaluation, confusion matrix, accuracy/precision/recall/F1, feature importance and cross-validation accuracy.
+6. Cluster Insights includes silhouette/Davies-Bouldin/Calinski-Harabasz scores, K=2..8 silhouette evaluation, segment profile table and PCA view.
+7. Tables use a light white presentation.
+8. Plotly toolbars remain hidden and graph styling stays light.
