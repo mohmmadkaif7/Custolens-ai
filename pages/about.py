@@ -35,4 +35,4 @@ st.markdown("""
 5. **Act** using segment-specific business strategies.
 """)
 
-st.info("CustoLens is designed as a decision-support system: the model provides evidence and the business strategy layer turns that evidence into action.")
+st.info("CustoLens is designed as a decision-support system: The model provides evidence and the business strategy layer turns that evidence into action.")
