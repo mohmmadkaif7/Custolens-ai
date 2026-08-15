@@ -44,4 +44,4 @@ for i, (icon, title, copy) in enumerate(features):
             unsafe_allow_html=True
         )
 
-st.info("Start with Dashboard for the overall picture, or use Customer Prediction for a live AI demonstration.")
+
