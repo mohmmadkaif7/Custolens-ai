@@ -106,7 +106,8 @@ with tab_overview:
         )
         pie.update_traces(textposition="inside", textinfo="percent+label")
         pie.update_layout(
-            margin=dict(l=10, r=10, t=20, b=10),
+            title="Customer Segment Distribution",
+            margin=dict(l=10, r=10, t=50, b=10),
             showlegend=False,
             annotations=[dict(text=f"<b>{total:,}</b><br>Customers", showarrow=False,
                               font=dict(size=16, color="#172033"))],
