@@ -4,7 +4,7 @@ from src.ui import inject_styles
 
 inject_styles()
 st.markdown('<div class="page-kicker">About the project</div>', unsafe_allow_html=True)
-st.title("About CustoLens AI")
+st.title("About CustoLens")
 st.markdown('<div class="page-subtitle">An explainable customer intelligence platform built around segmentation, prediction and business strategy.</div>', unsafe_allow_html=True)
 
 a,b = st.columns(2)
@@ -12,7 +12,7 @@ with a:
     st.markdown("""
     <div class="info-card">
     <h3>What it does</h3>
-    <p>CustoLens AI identifies customer groups from age, income, annual spending and purchase behavior. A Random Forest classifier then predicts the segment of a new customer.</p>
+    <p>CustoLens identifies customer groups from age, income, annual spending and purchase behavior. A Random Forest classifier then predicts the segment of a new customer.</p>
     <p>The platform goes one step further by explaining the result and connecting each segment to business actions.</p>
     </div>
     """, unsafe_allow_html=True)
@@ -35,4 +35,4 @@ st.markdown("""
 5. **Act** using segment-specific business strategies.
 """)
 
-st.info("CustoLens AI is designed as a decision-support system: the model provides evidence and the business strategy layer turns that evidence into action.")
+st.info("CustoLens is designed as a decision-support system: the model provides evidence and the business strategy layer turns that evidence into action.")

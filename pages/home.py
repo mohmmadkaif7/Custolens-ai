@@ -8,7 +8,7 @@ st.markdown("""
 <div class="hero">
   <div class="hero-title">Turn customer behavior into actionable business strategies.</div>
   <div class="hero-copy">
-    CustoLens AI uses customer data, machine learning and explainable insights
+    CustoLens uses customer data, machine learning and explainable insights
     to identify meaningful segments, predict customer value and turn those
     insights into practical business actions.
   </div>
@@ -27,7 +27,7 @@ for col, label, value, note in [
             unsafe_allow_html=True
         )
 
-st.markdown("### Explore CustoLens AI")
+st.markdown("### Explore CustoLens")
 features = [
     ("📊", "Dashboard", "Get the complete customer picture at a glance."),
     ("🎯", "Customer Prediction", "Predict a customer's segment and understand the result."),

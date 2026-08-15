@@ -72,57 +72,31 @@ def inject_styles():
         padding: .75rem .9rem 1rem .9rem;
     }
 
-    /* Project title/logo at the very top of the sidebar. */
-    [data-testid="stLogo"] {
-        padding: 4px 8px 14px 8px !important;
-        margin-bottom: 4px !important;
+ /* ============================================================
+   CUSTOM CUSTOLENS SIDEBAR LOGO
+   ============================================================ */
+
+    .custom-sidebar-logo {
+        width: 100%;
+        padding: 8px 8px 24px 8px;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        box-sizing: border-box;
     }
-    [data-testid="stLogo"] img {
-        max-width: 205px !important;
+
+    .custom-sidebar-logo img {
+        width: 245px !important;
+        max-width: 100% !important;
         height: auto !important;
+        display: block !important;
+        object-fit: contain !important;
     }
     section[data-testid="stSidebar"] .stMarkdown,
     section[data-testid="stSidebar"] p {
         color: #dbe7ff !important;
     }
 
-    .sidebar-brand {
-        padding: 4px 10px 14px 10px;
-        margin: 0 0 8px 0;
-        border-bottom: 1px solid rgba(255,255,255,.14);
-    }
-    .brand-row {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-    }
-    .brand-mark {
-        width: 39px;
-        height: 39px;
-        border-radius: 12px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        background: linear-gradient(135deg,#8B5CF6,#6D28D9);
-        color: white;
-        font-size: 20px;
-        font-weight: 900;
-        box-shadow: 0 8px 20px rgba(124,58,237,.32);
-    }
-    .brand-name {
-        color: #fff;
-        font-size: 1.24rem;
-        font-weight: 850;
-        letter-spacing: -.02em;
-    }
-    .brand-tagline {
-        color: #AEBFDF;
-        font-size: .76rem;
-        line-height: 1.5;
-        margin: 13px 7px 0;
-        max-width: 220px;
-    }
-    .brand-tagline span { color: #B58CFF; }
 
     /* Streamlit's native navigation */
     [data-testid="stSidebarNav"] {

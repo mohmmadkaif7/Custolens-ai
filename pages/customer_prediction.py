@@ -6,7 +6,7 @@ inject_styles()
 df = load_customer_data()
 
 page_header(
-    "AI Prediction",
+    "Prediction",
     "Customer Prediction",
     "Predict a customer segment and immediately see the recommended business action."
 )
@@ -59,7 +59,6 @@ with right:
               <div class="recommendation-heading">Recommended Strategy</div>
               <div class="recommendation-strategy">{result["strategy"]}</div>
 
-              <div class="recommendation-heading action-heading">Recommended Actions</div>
               <ul class="recommendation-list">
                 {action_html}
               </ul>

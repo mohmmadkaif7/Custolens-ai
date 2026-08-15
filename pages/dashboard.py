@@ -3,20 +3,16 @@ import pandas as pd
 import numpy as np
 import plotly.express as px
 import plotly.graph_objects as go
+
 from sklearn.model_selection import train_test_split, cross_val_score
+
 from sklearn.metrics import (
     accuracy_score,
     precision_score,
     recall_score,
     f1_score,
     confusion_matrix,
-    silhouette_score,
-    davies_bouldin_score,
-    calinski_harabasz_score,
 )
-from sklearn.preprocessing import StandardScaler
-from sklearn.cluster import KMeans
-from sklearn.decomposition import PCA
 
 from src.ui import (
     inject_styles,
@@ -26,6 +22,7 @@ from src.ui import (
     show_plotly,
     segment_counts,
 )
+
 from src.prediction_pipeline import model
 
 inject_styles()
@@ -59,20 +56,8 @@ f1_macro = f1_score(y_test, y_pred, average="macro", zero_division=0)
 cv_scores = cross_val_score(model, X, y, cv=5, scoring="accuracy")
 cv_accuracy = cv_scores.mean()
 
-# K-Means quality metrics and silhouette-by-K curve.
-X_scaled = StandardScaler().fit_transform(X)
-km3 = KMeans(n_clusters=3, random_state=42, n_init=10)
-cluster_labels = km3.fit_predict(X_scaled)
-silhouette_3 = silhouette_score(X_scaled, cluster_labels)
-db_3 = davies_bouldin_score(X_scaled, cluster_labels)
-ch_3 = calinski_harabasz_score(X_scaled, cluster_labels)
-
-k_values = list(range(2, 9))
-silhouette_values = []
-for k in k_values:
-    km = KMeans(n_clusters=k, random_state=42, n_init=10)
-    labels = km.fit_predict(X_scaled)
-    silhouette_values.append(silhouette_score(X_scaled, labels))
+cv_scores = cross_val_score(model, X, y, cv=5, scoring="accuracy")
+cv_accuracy = cv_scores.mean()
 
 counts = segment_counts(df)
 total = len(df)
@@ -80,11 +65,10 @@ total = len(df)
 # ------------------------------------------------------------------
 # Clickable categories
 # ------------------------------------------------------------------
-tab_overview, tab_customer, tab_model, tab_cluster = st.tabs([
+tab_overview, tab_customer, tab_model = st.tabs([
     "Overview",
     "Customer Analytics",
     "Model Performance",
-    "Cluster Insights",
 ])
 
 # ============================== OVERVIEW ===========================
@@ -355,125 +339,3 @@ with tab_model:
     show_plotly(fig, use_container_width=True)
 
     st.info("Annual income and annual spending are the strongest predictors in the trained Random Forest model.")
-
-# ============================ CLUSTER INSIGHTS ====================
-with tab_cluster:
-    st.markdown('<div class="combined-tab-note">K-Means quality, customer-cluster visualization and segment profiles.</div>', unsafe_allow_html=True)
-
-    c1, c2, c3 = st.columns(3)
-    c1.metric("Silhouette Score", f"{silhouette_3:.4f}")
-    c2.metric("Davies-Bouldin Index", f"{db_3:.4f}")
-    c3.metric("Calinski-Harabasz Score", f"{ch_3:.1f}")
-
-    left, right = st.columns(2, gap="large")
-
-    with left:
-        fig = px.scatter(
-            df,
-            x="income",
-            y="annual_spending",
-            color="segment",
-            hover_data=["name", "age", "purchase_frequency"],
-            color_discrete_map={
-                "Premium": "#7C3AED",
-                "Regular": "#2563EB",
-                "Budget": "#14B8A6",
-            },
-            title="Customer Cluster Visualization",
-        )
-        fig.update_layout(
-            xaxis_title="Annual Income (₹)",
-            yaxis_title="Annual Spending (₹)",
-        )
-        show_plotly(fig, use_container_width=True)
-
-    with right:
-        fig = go.Figure()
-        fig.add_trace(
-            go.Scatter(
-                x=k_values,
-                y=silhouette_values,
-                mode="lines+markers+text",
-                text=[f"{v:.3f}" for v in silhouette_values],
-                textposition="top center",
-                line=dict(color="#7C3AED", width=3),
-                marker=dict(color="#7C3AED", size=8),
-            )
-        )
-        fig.add_vline(
-            x=3,
-            line_dash="dot",
-            line_color="#14B8A6",
-        )
-        fig.update_layout(
-            title="Cluster Evaluation · Silhouette Score by K",
-            xaxis_title="Number of Clusters (K)",
-            yaxis_title="Silhouette Score",
-            yaxis_range=[0.20, 0.34],
-            margin=dict(l=10, r=10, t=55, b=10),
-        )
-        show_plotly(fig, use_container_width=True)
-
-    st.markdown("### Segment profile summary")
-    profile = (
-        df.groupby("segment")
-        .agg(
-            Customers=("name", "count"),
-            Avg_Age=("age", "mean"),
-            Avg_Income=("income", "mean"),
-            Avg_Spending=("annual_spending", "mean"),
-            Avg_Frequency=("purchase_frequency", "mean"),
-        )
-        .reindex(LABELS)
-        .reset_index()
-    )
-
-    rows = []
-    for _, row in profile.iterrows():
-        rows.append(
-            f"<tr><td class='segment-name'>{row['segment']}</td>"
-            f"<td>{int(row['Customers']):,}</td>"
-            f"<td>{row['Customers']/total*100:.1f}%</td>"
-            f"<td>{row['Avg_Age']:.1f}</td>"
-            f"<td>{money(row['Avg_Income'])}</td>"
-            f"<td>{money(row['Avg_Spending'])}</td>"
-            f"<td>{row['Avg_Frequency']:.2f}</td></tr>"
-        )
-
-    st.markdown(
-        f"""
-        <table class="white-table">
-          <thead>
-            <tr>
-              <th>Segment</th><th>Customers</th><th>% of Total</th>
-              <th>Avg. Age</th><th>Avg. Income</th>
-              <th>Avg. Spending</th><th>Avg. Purchase Frequency</th>
-            </tr>
-          </thead>
-          <tbody>{''.join(rows)}</tbody>
-        </table>
-        """,
-        unsafe_allow_html=True,
-    )
-
-    st.markdown("### PCA customer view")
-    pca = PCA(n_components=2, random_state=42)
-    pca_values = pca.fit_transform(X_scaled)
-    pca_df = pd.DataFrame({
-        "PC1": pca_values[:, 0],
-        "PC2": pca_values[:, 1],
-        "Segment": df["segment"].values,
-    })
-    fig = px.scatter(
-        pca_df,
-        x="PC1",
-        y="PC2",
-        color="Segment",
-        color_discrete_map={
-            "Premium": "#7C3AED",
-            "Regular": "#2563EB",
-            "Budget": "#14B8A6",
-        },
-        title="Customer Segmentation · PCA View",
-    )
-    show_plotly(fig, use_container_width=True)
