@@ -52,3 +52,19 @@ Upload a CSV and the application will:
 ## Prediction Explainability
 
 The Customer Prediction page shows the predicted segment beside the profile, model confidence, segment benchmark comparisons and local feature-support signals.
+
+
+## 🧪 Testing
+
+CustoLens AI includes automated tests using **pytest** covering:
+
+- Data validation and adaptation
+- ML prediction and probabilities
+- Business recommendations
+- FastAPI endpoints
+- Invalid input handling
+
+Run the complete test suite with:
+
+```bash
+pytest -v
