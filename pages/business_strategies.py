@@ -8,7 +8,7 @@ st.markdown('<div class="page-kicker">Action Center</div>', unsafe_allow_html=Tr
 st.title("Business Strategies")
 st.markdown('<div class="page-subtitle">Turn customer segments into focused retention, growth and engagement actions.</div>', unsafe_allow_html=True)
 
-segment_cols = st.columns(3, gap="large")
+segment_cols = st.columns(3, gap="small")
 for i, segment in enumerate(["Premium", "Regular", "Budget"]):
     seg = df[df["segment"] == segment]
     if seg.empty:

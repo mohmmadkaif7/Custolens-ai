@@ -28,6 +28,7 @@ LOGO_PATH = os.path.join(
 st.logo(
     LOGO_PATH,
     size="large",
+    icon_image="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=",
 )
 
 

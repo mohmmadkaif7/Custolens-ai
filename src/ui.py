@@ -1,4 +1,3 @@
-
 import os
 import pandas as pd
 import streamlit as st
@@ -211,14 +210,67 @@ def inject_styles():
     .reason-title { color:#172033; font-weight:800; font-size:.9rem; }
     .reason-copy { color:#667085; font-size:.82rem; line-height:1.45; margin-top:3px; }
 
-    .strategy-card { padding: 24px; min-height: 320px; }
-    .strategy-badge {
-        display:inline-block; padding:5px 10px; border-radius:999px;
-        font-size:.73rem; font-weight:850; background:#F1EAFE; color:#6D28D9;
-    }
-    .strategy-title { font-size:1.45rem; font-weight:850; color:#172033; margin:10px 0 5px; }
-    .strategy-goal { color:#667085; font-size:.86rem; line-height:1.5; }
-    .strategy-list { color:#526174; font-size:.86rem; line-height:1.8; padding-left: 18px; }
+    .strategy-card {
+    padding: 24px;
+    min-height: 320px;
+    box-sizing: border-box;
+}
+
+.strategy-badge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 999px;
+    font-size: .73rem;
+    font-weight: 850;
+    background: #F1EAFE;
+    color: #6D28D9;
+}
+
+.strategy-title {
+    font-size: 1.45rem;
+    font-weight: 850;
+    color: #172033;
+    margin: 10px 0 5px;
+    line-height: 1.35;
+    min-height: 78px;
+}
+
+.strategy-goal {
+    color: #667085;
+    font-size: .86rem;
+    line-height: 1.5;
+    min-height: 78px;
+}
+
+.strategy-list {
+    color: #526174;
+    font-size: .86rem;
+    line-height: 1.8;
+    padding-left: 18px;
+    margin-top: 18px;
+}
+
+/* Equal-height strategy columns */
+div[data-testid="stHorizontalBlock"] {
+    align-items: stretch !important;
+}
+
+div[data-testid="stHorizontalBlock"] > div[data-testid="stColumn"] {
+    display: flex !important;
+    align-items: stretch !important;
+}
+
+div[data-testid="stHorizontalBlock"] > div[data-testid="stColumn"] > div {
+    width: 100% !important;
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+.strategy-card-equal {
+    width: 100% !important;
+    height: 700px !important;
+    min-height: 700px !important;
+}
 
     .upload-zone {
         border: 1.5px dashed #C4B5FD;
@@ -311,16 +363,11 @@ def inject_styles():
         font-size: .9rem;
         line-height: 1.7;
     }
-    .strategy-card-equal {
-        min-height: 500px;
-        height: 500px;
-        box-sizing: border-box;
-        display: flex;
-        flex-direction: column;
-    }
-    .strategy-card-equal .strategy-list {
-        margin-top: auto;
-    }
+   .strategy-card-equal {
+    height: 700px;
+    min-height: 700px;
+    box-sizing: border-box;
+}
 
     .combined-tab-note {
         color: #667085;
