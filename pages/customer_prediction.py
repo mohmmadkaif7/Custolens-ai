@@ -37,7 +37,7 @@ with left:
     predict_clicked = st.button("Analyze Customer", use_container_width=True)
 
 with right:
-    st.markdown("### Prediction & recommended action")
+    st.markdown("### Prediction & Recommended action")
 
     if predict_clicked:
         result = predict_customer_details(
