@@ -13,7 +13,6 @@ from src.ui import inject_styles
 # Load global UI styling
 inject_styles()
 
-
 # ============================================================
 # LOGO
 # ============================================================
@@ -21,15 +20,29 @@ inject_styles()
 LOGO_PATH = os.path.join(
     os.path.dirname(os.path.abspath(__file__)),
     "assets",
-    "custolens_logo.png",
+    "custolens_logo1.png",
 )
 
-# Single CustoLens logo at the top of the sidebar
 st.logo(
     LOGO_PATH,
     size="large",
 )
 
+st.markdown(
+    """
+    <style>
+    /* Hide logo from the main content/header only */
+    [data-testid="stHeader"] a {
+        display: none !important;
+    }
+
+    [data-testid="stHeader"] img {
+        display: none !important;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
+)
 
 # ============================================================
 # APPLICATION NAVIGATION
@@ -73,7 +86,6 @@ pages = [
         icon=":material/info:",
     ),
 ]
-
 
 # ============================================================
 # NAVIGATION
