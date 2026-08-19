@@ -116,7 +116,7 @@ if submitted:
         try:
 
             response = requests.post(
-                "http://127.0.0.1:8000/support",
+                "https://custolens-ai.onrender.com/support",
                 json=payload,
                 timeout=15
             )
