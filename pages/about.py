@@ -103,7 +103,7 @@ st.markdown("---")
 st.markdown("## 💬 Need Help?")
 
 st.write(
-    "Have a question or facing an issue with CustoLens AI? "
+    "Have a question or facing an issue with CustoLens ? "
     "Our support team is here to help."
 )
 
@@ -157,10 +157,10 @@ if st.button(
     else:
 
         subject = (
-            f"CustoLens AI Support - {category}"
+            f"CustoLens Support - {category}"
         )
 
-        body = f"""Hello CustoLens AI Support Team,
+        body = f"""Hello CustoLens Support Team,
 
 Name: {name}
 Email: {email}
