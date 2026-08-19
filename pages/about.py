@@ -1,6 +1,7 @@
 import requests
 import streamlit as st
 from src.ui import inject_styles
+from urllib.parse import quote
 
 inject_styles()
 st.markdown('<div class="page-kicker">About the project</div>', unsafe_allow_html=True)
@@ -86,87 +87,75 @@ with st.form("support_form"):
     )
 
 
-# ============================================================
-# SEND SUPPORT REQUEST
-# ============================================================
+st.markdown("## 💬 Need Help?")
+st.write(
+    "Have a question or facing an issue with CustoLens AI? "
+    "Our support team is here to help."
+)
 
-if submitted:
+name = st.text_input("Name")
+email = st.text_input("Email")
+
+category = st.selectbox(
+    "Issue Category",
+    [
+        "Technical Issue",
+        "Prediction Issue",
+        "CSV Upload Issue",
+        "Recommendation Issue",
+        "Other"
+    ]
+)
+
+message = st.text_area(
+    "Message",
+    height=150
+)
+
+# ---------------------------------------------------------
+# EMAIL SUPPORT
+# ---------------------------------------------------------
+
+if st.button("📩 Contact Support", use_container_width=True):
 
     if not name.strip():
-
-        st.error("Please enter your name.")
+        st.warning("Please enter your name.")
 
     elif not email.strip():
-
-        st.error("Please enter your email address.")
+        st.warning("Please enter your email.")
 
     elif not message.strip():
-
-        st.error("Please describe your issue.")
+        st.warning("Please describe your issue.")
 
     else:
 
-        payload = {
-            "name": name.strip(),
-            "email": email.strip(),
-            "category": category,
-            "message": message.strip()
-        }
+        subject = f"CustoLens AI Support - {category}"
 
-        try:
+        body = f"""Hello CustoLens AI Support Team,
 
-            response = requests.post(
-                "https://custolens-ai.onrender.com/support",
-                json=payload,
-                timeout=15
-            )
+Name: {name}
+Email: {email}
+Issue Category: {category}
 
-            if response.status_code == 200:
+Message:
+{message}
 
-                st.success(
-                    "✅ Your support request has been "
-                    "submitted successfully!"
-                )
+Thank you.
+"""
 
-                st.info(
-                    "Our support team will get back to you "
-                    "as soon as possible."
-                )
+        mailto_link = (
+            "mailto:custolens@gmail.com"
+            f"?subject={quote(subject)}"
+            f"&body={quote(body)}"
+        )
 
-            else:
+        st.markdown(
+            f'''
+            <meta http-equiv="refresh" content="0; url={mailto_link}">
+            ''',
+            unsafe_allow_html=True
+        )
 
-                try:
-                    detail = response.json().get(
-                        "detail",
-                        "Unable to submit support request."
-                    )
-
-                except Exception:
-
-                    detail = (
-                        "Unable to submit support request."
-                    )
-
-                st.error(
-                    f"❌ {detail}"
-                )
-
-        except requests.exceptions.ConnectionError:
-
-            st.error(
-                "❌ Unable to connect to the CustoLens AI "
-                "backend. Please make sure FastAPI is running."
-            )
-
-        except requests.exceptions.Timeout:
-
-            st.error(
-                "❌ The request timed out. Please try again."
-            )
-
-        except Exception:
-
-            st.error(
-                "❌ Something went wrong while submitting "
-                "your support request."
-            )
+        st.success(
+            "Opening your email application..."
+        )
