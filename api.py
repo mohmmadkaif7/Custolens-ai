@@ -1,7 +1,15 @@
 from fastapi import FastAPI, UploadFile, File, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr
 import pandas as pd
 import io
+import os
+import smtplib
+
+from email.message import EmailMessage
+
+from dotenv import load_dotenv
+
+load_dotenv()
 
 from src.prediction_pipeline import predict_customer_segment
 from src.recommendation_engine import generate_recommendations
@@ -23,7 +31,7 @@ app = FastAPI(
 
 
 # ============================================================
-# REQUEST MODEL
+# REQUEST MODEL - CUSTOMER PREDICTION
 # ============================================================
 
 class CustomerInput(BaseModel):
@@ -31,6 +39,18 @@ class CustomerInput(BaseModel):
     age: float
     income: float
     annual_spending: float
+
+
+# ============================================================
+# REQUEST MODEL - CUSTOMER SUPPORT
+# ============================================================
+
+class SupportRequest(BaseModel):
+
+    name: str
+    email: EmailStr
+    category: str
+    message: str
 
 
 # ============================================================
@@ -71,12 +91,10 @@ def predict_customer(
     try:
 
         # ----------------------------------------------------
-        # Purchase frequency is hidden from the API user,
-        # just as it is hidden from the Streamlit UI.
+        # Purchase frequency is hidden from the API user.
         # ----------------------------------------------------
 
         purchase_frequency = 0.5
-
 
         # ----------------------------------------------------
         # MODEL PREDICTION
@@ -93,7 +111,6 @@ def predict_customer(
             annual_spending=customer.annual_spending
         )
 
-
         # ----------------------------------------------------
         # RECOMMENDATIONS
         # ----------------------------------------------------
@@ -104,14 +121,12 @@ def predict_customer(
             )
         )
 
-
         return {
 
             "predicted_segment": segment,
 
             "recommendations": recommendations
         }
-
 
     except Exception as error:
 
@@ -149,7 +164,6 @@ async def predict_csv(
                 detail="Please upload a CSV file."
             )
 
-
         # ----------------------------------------------------
         # READ CSV
         # ----------------------------------------------------
@@ -160,7 +174,6 @@ async def predict_csv(
             io.BytesIO(contents)
         )
 
-
         # ----------------------------------------------------
         # PREPARE CUSTOMER DATA
         # ----------------------------------------------------
@@ -170,7 +183,6 @@ async def predict_csv(
                 uploaded_df
             )
         )
-
 
         # ----------------------------------------------------
         # VALIDATION
@@ -192,13 +204,11 @@ async def predict_csv(
                 }
             )
 
-
         # ----------------------------------------------------
         # PREDICT CUSTOMERS
         # ----------------------------------------------------
 
         predictions = []
-
 
         for _, row in prepared_df.iterrows():
 
@@ -221,7 +231,6 @@ async def predict_csv(
                 prediction
             )
 
-
         # ----------------------------------------------------
         # CREATE RESULTS
         # ----------------------------------------------------
@@ -232,13 +241,11 @@ async def predict_csv(
             "predicted_segment"
         ] = predictions
 
-
         # ----------------------------------------------------
         # GENERATE RECOMMENDATIONS
         # ----------------------------------------------------
 
         recommendations = []
-
 
         for segment in predictions:
 
@@ -251,7 +258,6 @@ async def predict_csv(
             recommendations.append(
                 recommendation
             )
-
 
         # ----------------------------------------------------
         # SUMMARY
@@ -271,7 +277,6 @@ async def predict_csv(
                 "Budget"
             )
         }
-
 
         # ----------------------------------------------------
         # RETURN RESPONSE
@@ -294,11 +299,9 @@ async def predict_csv(
             "recommendations": recommendations
         }
 
-
     except HTTPException:
 
         raise
-
 
     except Exception as error:
 
@@ -307,4 +310,164 @@ async def predict_csv(
             status_code=500,
 
             detail=str(error)
+        )
+
+
+# ============================================================
+# CUSTOMER SUPPORT - EMAIL
+# ============================================================
+
+@app.post("/support")
+def contact_support(
+    request: SupportRequest
+):
+
+    try:
+
+        # ----------------------------------------------------
+        # READ EMAIL CONFIGURATION
+        # ----------------------------------------------------
+
+        smtp_email = os.getenv(
+            "SMTP_EMAIL"
+        )
+
+        smtp_password = os.getenv(
+            "SMTP_APP_PASSWORD"
+        )
+
+        support_email = os.getenv(
+            "SUPPORT_EMAIL"
+        )
+
+        # ----------------------------------------------------
+        # CHECK CONFIGURATION
+        # ----------------------------------------------------
+
+        if not smtp_email:
+            raise HTTPException(
+                status_code=500,
+                detail="Support email configuration is missing."
+            )
+
+        if not smtp_password:
+            raise HTTPException(
+                status_code=500,
+                detail="SMTP app password is missing."
+            )
+
+        if not support_email:
+            raise HTTPException(
+                status_code=500,
+                detail="Support destination email is missing."
+            )
+
+        # ----------------------------------------------------
+        # CREATE EMAIL
+        # ----------------------------------------------------
+
+        email_message = EmailMessage()
+
+        email_message["Subject"] = (
+            f"CustoLens AI Support - {request.category}"
+        )
+
+        email_message["From"] = smtp_email
+
+        email_message["To"] = support_email
+
+        # ----------------------------------------------------
+        # REPLY TO CUSTOMER
+        # ----------------------------------------------------
+
+        email_message["Reply-To"] = request.email
+
+        # ----------------------------------------------------
+        # EMAIL BODY
+        # ----------------------------------------------------
+
+        email_body = f"""
+CustoLens AI - Customer Support Request
+========================================
+
+Customer Name:
+{request.name}
+
+Customer Email:
+{request.email}
+
+Issue Category:
+{request.category}
+
+Message:
+{request.message}
+
+----------------------------------------
+This request was submitted through the
+CustoLens AI Customer Support form.
+"""
+
+        email_message.set_content(
+            email_body
+        )
+
+        # ----------------------------------------------------
+        # SEND EMAIL THROUGH GMAIL SMTP
+        # ----------------------------------------------------
+
+        with smtplib.SMTP(
+            "smtp.gmail.com",
+            587
+        ) as server:
+
+            server.starttls()
+
+            server.login(
+                smtp_email,
+                smtp_password
+            )
+
+            server.send_message(
+                email_message
+            )
+
+        # ----------------------------------------------------
+        # SUCCESS RESPONSE
+        # ----------------------------------------------------
+
+        return {
+
+            "status": "success",
+
+            "message": (
+                "Your support request has been "
+                "submitted successfully."
+            )
+        }
+
+    except HTTPException:
+
+        raise
+
+    except smtplib.SMTPAuthenticationError:
+
+        raise HTTPException(
+
+            status_code=500,
+
+            detail=(
+                "Email authentication failed. "
+                "Please check the Gmail App Password."
+            )
+        )
+
+    except Exception as error:
+
+        raise HTTPException(
+
+            status_code=500,
+
+            detail=(
+                "Unable to send support request."
+            )
         )
