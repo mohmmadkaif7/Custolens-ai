@@ -23,27 +23,13 @@ LOGO_PATH = os.path.join(
     "custolens_logo1.png",
 )
 
-st.logo(
-    LOGO_PATH,
-    size="large",
-    icon_image="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=",
-)
-
-st.markdown(
-    """
-    <style>
-    /* Hide logo from the main content/header only */
-    [data-testid="stHeader"] a {
-        display: none !important;
-    }
-
-    [data-testid="stHeader"] img {
-        display: none !important;
-    }
-    </style>
-    """,
-    unsafe_allow_html=True,
-)
+if os.path.exists(LOGO_PATH):
+    st.logo(
+        LOGO_PATH,
+        size="large",
+    )
+else:
+    st.error("Logo file not found!")
 
 # ============================================================
 # APPLICATION NAVIGATION

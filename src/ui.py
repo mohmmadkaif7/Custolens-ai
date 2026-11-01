@@ -71,26 +71,6 @@ def inject_styles():
         padding: .75rem .9rem 1rem .9rem;
     }
 
- /* ============================================================
-   CUSTOM CUSTOLENS SIDEBAR LOGO
-   ============================================================ */
-
-    .custom-sidebar-logo {
-        width: 100%;
-        padding: 8px 8px 24px 8px;
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
-        box-sizing: border-box;
-    }
-
-    .custom-sidebar-logo img {
-        width: 245px !important;
-        max-width: 100% !important;
-        height: auto !important;
-        display: block !important;
-        object-fit: contain !important;
-    }
     section[data-testid="stSidebar"] .stMarkdown,
     section[data-testid="stSidebar"] p {
         color: #dbe7ff !important;
@@ -596,11 +576,6 @@ div[data-testid="stHorizontalBlock"] > div[data-testid="stColumn"] > div {
     hr { border-color:#E9EDF3; }
     </style>
     """, unsafe_allow_html=True)
-
-def render_sidebar_brand():
-    """Deprecated: the project title is rendered at the top with st.logo in app.py."""
-    return None
-
 
 def show_plotly(fig, **kwargs):
     """Render Plotly charts with a light professional theme and no modebar."""
