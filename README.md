@@ -4,6 +4,14 @@
 
 CustoLens AI is an AI-powered customer intelligence platform built using Python and Streamlit that helps businesses analyze customer data, perform customer segmentation, predict customer groups, and generate data-driven business strategies.
 
+## 🌐 Live Demo
+
+Experience CustoLens AI:
+
+[Launch CustoLens AI](https://custolens-ai.streamlit.app/)
+
+[View Source Code](https://github.com/mohmmadkaif7/Custolens-ai)
+
 ## 🚀 Features
 
 * Customer segmentation into Premium, Regular, and Budget categories
